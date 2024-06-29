@@ -1,4 +1,3 @@
-```
 local API = require("api")
 
 ID = {cannon = 121017, cannonball = 13870} --change cannon ID when it isn't a dwarven siege engine
@@ -32,6 +31,10 @@ local function useExcali()
   API.DoAction_Inventory1(36619,0,1,API.OFF_ACT_GeneralInterface_route) -- augmented Excal ID
 end
 
+local function useShard()
+  API.RandomSleep2(2000,1000,1000)
+  API.DoAction_Inventory1(43358, 0, 1,API.OFF_ACT_GeneralInterface_route)
+end
 
 
 local function readPowder()
@@ -67,16 +70,25 @@ return true
   end
 end
 
+local function readShard()
+  local buffs = API.DeBuffbar_GetIDstatus(43358)
+  if buffs.conv_text < 1 then
+    useExcali()
+   print("Restoring Prayer with Shard")
+return true
+  else
+    return false 
+  end
+end
 
 
 API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
 do-----------------------------------------------------------------------------------
-API.SetDrawTrackedSkills(true)
-printProgressReport()
 readPowder()
 readExcalibur()
 readOverload()
+readShard()
 clickCannon()
 API.SetMaxIdleTime(10)
 API.DoRandomEvents()
