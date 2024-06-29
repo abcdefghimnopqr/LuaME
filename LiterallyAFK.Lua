@@ -3,16 +3,10 @@ local API = require("api")
 ID = {cannon = 121017, cannonball = 13870} --change cannon ID when it isn't a dwarven siege engine
 
 local function clickCannon()
-local cannonball = ID.cannonball
-local cooldown = API.DeBuffbar_GetIDstatus(2)
-if not cooldown then
-  if API.InvItemcount_2(cannonball) then
       print("You reload the cannon.")
+      API.DoAction_Object1(0xd3, 0, {ID.cannon}, 50)
       API.RandomSleep2(300, 200, 400)
-      return API.DoAction_Object1(0xd3, 0, {ID.cannon}, 50)
     end
-  end
-end
 
 
 local function usePowder()
@@ -27,15 +21,26 @@ local function useOverload()
 end
 
 local function useExcali()
-  API.RandomSleep2(2000, 1000, 1000)
+  API.RandomSleep2(4000, 1000, 1000)
   API.DoAction_Inventory1(36619,0,1,API.OFF_ACT_GeneralInterface_route) -- augmented Excal ID
+  API.RandomSleep2(4000, 1000, 1000)
 end
 
 local function useShard()
-  API.RandomSleep2(2000,1000,1000)
+  API.RandomSleep2(4000,1000,1000)
   API.DoAction_Inventory1(43358, 0, 1,API.OFF_ACT_GeneralInterface_route)
+  API.RandomSleep2(4000, 1000, 1000)
 end
 
+local function readCannon()
+local buffs = API.DeBuffbar_GetIDstatus(2)
+if buffs.conv_text < 1 then
+useCannon()
+return true
+else
+return false
+end
+end
 
 local function readPowder()
 local buffs = API.Buffbar_GetIDstatus(52806)
@@ -90,7 +95,7 @@ readPowder()
 readExcalibur()
 readOverload()
 readShard()
-clickCannon()
+readCannon()
 API.SetMaxIdleTime(10)
 API.DoRandomEvents()
 end----------------------------------------------------------------------------------
