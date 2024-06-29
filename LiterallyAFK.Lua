@@ -22,8 +22,8 @@ end
 
 local function useOverload()
   API.RandomSleep2(800, 1000, 1000)
-  API.KeyboardPress2(0x41, 50, 150)
-  API.RandomSleep2(1000, 1000, 1000)
+  API.DoAction_Ability("Elder overload salve",1, API.OFF_ACT_GeneralInterface_route) -- change for your overload
+  API.RandomSleep2(800, 1000, 1000)
 end
 
 local function useExcali()
