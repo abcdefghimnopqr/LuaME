@@ -73,7 +73,7 @@ end
 local function readShard()
   local buffs = API.DeBuffbar_GetIDstatus(43358)
   if buffs.conv_text < 1 then
-    useExcali()
+    useShard()
    print("Restoring Prayer with Shard")
 return true
   else
