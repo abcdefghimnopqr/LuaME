@@ -2,7 +2,7 @@ local API = require("api")
 
 ID = {cannon = 121017, cannonball = 13870} --change cannon ID when it isn't a dwarven siege engine
 
-local function clickCannon()
+local function useCannon()
       print("You reload the cannon.")
       API.DoAction_Object1(0xd3, 0, {ID.cannon}, 50)
       API.RandomSleep2(300, 200, 400)
