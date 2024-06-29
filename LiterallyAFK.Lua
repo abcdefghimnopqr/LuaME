@@ -85,6 +85,7 @@ end
 API.Write_LoopyLoop(true)
 while(API.Read_LoopyLoop())
 do-----------------------------------------------------------------------------------
+API.SetDrawTrackedSkills(true)
 readPowder()
 readExcalibur()
 readOverload()
