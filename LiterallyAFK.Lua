@@ -27,12 +27,12 @@ local function useOverload()
 end
 
 local function useExcali()
-  API.RandomSleep2(20000, 1000, 1000)
+  API.RandomSleep2(2000, 1000, 1000)
   API.DoAction_Inventory1(36619,0,1,API.OFF_ACT_GeneralInterface_route) -- augmented Excal ID
 end
 
 local function useShard()
-  API.RandomSleep2(20000,1000,1000)
+  API.RandomSleep2(2000,1000,1000)
   API.DoAction_Inventory1(43358, 0, 1,API.OFF_ACT_GeneralInterface_route)
 end
 
