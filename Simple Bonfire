@@ -1,0 +1,95 @@
+-- discord/jkl0
+
+-- imports
+local API = require("api")
+
+-- adjust these if you like
+local MAX_IDLE_TIME_MINUTES = 5
+local afk = os.time()
+
+ID = {
+    DIVINE_SPIRITS = 23912
+    FORGE = 27297
+    DIVINE_FORGE = 27298
+    BONFIRE = 110271 -- enter bonfire ID here
+    BANK = 92692-- enter bank chest/banker ID here
+}
+
+local function isMoving()
+    return API.ReadPlayerMovin()
+end
+
+local function idleCheck()
+    local timeDiff = os.difftime(os.time(), afk)
+    local randomTime = math.random((MAX_IDLE_TIME_MINUTES * 60) * 0.6, (MAX_IDLE_TIME_MINUTES * 60) * 0.9)
+
+    if timeDiff > randomTime then
+        API.PIdle2()
+        afk = os.time()
+    end
+end
+
+local function findNpcByAction(action)
+    local npcs = API.ReadAllObjectsArray({ 1 }, { -1 }, {})
+    if #npcs > 0 then
+        for _, npc in ipairs(npcs) do
+            if string.find(tostring(npc.Action), action) then
+                return npc
+            end
+        end
+    end
+    return false
+end
+
+local function watchforSpirit()
+local spirit = findNpcByAction("Collect reward")
+if spirit then
+        API.RandomSleep2(1200,200,200)
+        API.DoAction_NPC(0x29, API.OFF_ACT_InteractNPC_route, {ID.DIVINE_SPIRITS}, 10)       
+        API.RandomSleep2(800,200,200)
+    end
+end
+
+local function watchforForge()
+    local spirit = findNpcByAction("Collect reward")
+    if spirit then
+            API.RandomSleep2(1200,200,200)
+            API.DoAction_NPC(0x29, API.OFF_ACT_InteractNPC_route, {ID.FORGE}, 10)       
+            API.RandomSleep2(800,200,200)
+        end
+    end
+
+local function watchforDForge()
+        local spirit = findNpcByAction("Collect reward")
+        if spirit then
+                API.RandomSleep2(1200,200,200)
+                API.DoAction_NPC(0x29, API.OFF_ACT_InteractNPC_route, {ID.DIVINE_FORGE}, 10)       
+                API.RandomSleep2(800,200,200)
+            end
+    end
+
+local function watchforXP()
+    watchforForge() or 
+    watchforSpirit() or
+    watchforDForge()
+end
+
+while (API.Read_LoopyLoop()) do
+    watchforXP()
+    API.DoRandomEvents()
+    idleCheck()
+    API.SetDrawTrackedSkills(true)
+    
+if not isMoving() and ReadPlayerAnim(80) then
+    if API.Invfreecount_() == 28 then 
+        API.RandomSleep2(1200,200,400)
+         API.DoAction_Object1(0x33, API.OFF_ACT_GeneralObject_route3, {ID.BANK}, 50 )
+         API.WaitUntilMovingEnds()
+         API.RandomSleep2(1200,200,400)
+        else if API.Invfreecount_() == 0 then
+            API.DoAction_Object1(0x41,API.OFF_ACT_GeneralObject_route0,{ID.BONFIRE}, 50)
+            API.RandomSleep2(600,200,400)
+                end
+            end
+        end
+    end
