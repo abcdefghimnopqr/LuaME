@@ -1,0 +1,67 @@
+--@discord/jkl0
+--credit to @Prolacrush for his findEntity function
+
+local API = require("api")
+local MAX_IDLE_TIME_MINUTES = 5
+local afk = os.time()
+local player = API.GetLocalPlayerName()
+local rock_mining = API.ScriptDialogWindow2("Mining", {
+    "Copper rock", "Iron rock", "Coal rock", "Mithril rock", "Adamantite rock", "Runite rock", "Banite rock", "Luminite rock", "Orichalcite rock", "Drakolith rock", "Necrite rock", "Phasmatite rock", "Light animica rock", "Dark animica rock", "Novite rock", "Bathus rock", "Marmaros rock", "Kratonium rock", "Fractite rock", "Zephyrium rock", "Argonite rock", "Katagon rock", "Gorgonite rock", "Promethium rock"
+},"Start", "Close").Name;
+
+local function isMoving()
+    return API.ReadPlayerMovin()
+end
+
+local function idleCheck()
+    local timeDiff = os.difftime(os.time(), afk)
+    local randomTime = math.random((MAX_IDLE_TIME_MINUTES * 60) * 0.6, (MAX_IDLE_TIME_MINUTES * 60) * 0.9)
+
+    if timeDiff > randomTime then
+        API.PIdle2()
+        afk = os.time()
+    end
+end
+
+local function FindEntity(entityName, maximumDistance)
+    local allNPCS = API.ReadAllObjectsArray({0,12}, {-1}, {})
+    local returnEntities = {}
+    if #allNPCS > 0 then
+        for _, a in pairs(allNPCS) do
+            if(a.Id > 0) then
+                local distance = API.Math_DistanceF(a.Tile_XYZ, API.PlayerCoordfloat())
+                a.Distance = distance;
+                if a.Id ~= 0 and distance < maximumDistance then
+                    if a.Name == entityName then
+                        table.insert(returnEntities, a.Id)
+                    end
+                end
+            end
+        end
+        return { entity = returnEntities }
+    end
+end
+
+local function findRock()
+    local isWorking = API.IsPlayerAnimating_(player, 5)
+    local ore = FindEntity(rock_mining, 5);
+
+    if(API.LocalPlayer_HoverProgress() <= 90 and API.LocalPlayer_HoverProgress() ~= 0 and isWorking) then
+        print("Stamina")
+        API.DoAction_Object1(0x3a,API.OFF_ACT_GeneralObject_route0,{ ore.entity[1] },50);
+        API.RandomSleep2(3500, 3000, 12000)
+    end
+
+    if(not isWorking) then
+        print("Not Mining")
+        API.DoAction_Object1(0x3a,API.OFF_ACT_GeneralObject_route0,{ ore.entity[1] },50);
+        API.RandomSleep2(3000, 3000, 12000)
+    end
+end
+
+while (API.Read_LoopyLoop()) do
+    findRock()
+    API.DoRandomEvents()
+    idleCheck()
+    API.SetDrawTrackedSkills(true)
+end
